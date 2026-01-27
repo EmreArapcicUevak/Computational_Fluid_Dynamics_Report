@@ -35,7 +35,8 @@
 \usepackage{tabularx}
 \usepackage{subcaption}
 \usepackage{float}
-\usepackage{qrcode
+\usepackage{qrcode}
+\usepackage{listings}
 
 % Setting up the fancy page style
 \fancypagestyle{customStyle}{
@@ -45,6 +46,16 @@
 	\renewcommand{\footrulewidth}{1pt}
 }
 \pagestyle{customStyle}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  breaklines=true,
+  frame=single,
+  captionpos=b
+}
 
 % Setting up hyperref options
 \hypersetup {
@@ -59,7 +70,7 @@
 % Custom commands
 
 \AddToShipoutPictureBG{
-	\ifthenelse{\value{page}<1}{}{%
+	\ifthenelse{\value{page}<2}{}{%
 		\begin{tikzpicture}[remember picture,overlay]
 			\node [opacity=0.1, at=(current page.center)] {
 				\includegraphics[width=0.5\paperwidth]{Images/BackgroundLogo}
@@ -75,11 +86,11 @@
 			\vspace{15mm}
 
 			\begin{spacing}{2.5}
-				{\Huge \textbf{Report Title}} \\[1.2cm]
+				{\Huge \textbf{Microcontroller cooling system analysis}} \\[1.2cm]
 			\end{spacing}
 
-			{\LARGE \textbf{Course Name}} \\[0.5cm]
-			{\Large Course Code} \\[2cm]
+			{\LARGE \textbf{Computational Fluid Dynamics}} \\[0.5cm]
+			{\Large ME412} \\[2cm]
 
 			{\Large \textbf{International University of Sarajevo}} \\[0.3cm]
 			{\large \today}
@@ -92,6 +103,7 @@
 				\textbf{Students:} \\
 				\begin{itemize}
 					\item Emre Arapcic-Uevak
+					\item Vedad Siljic
 				\end{itemize}
 			\end{flushleft}
 		\end{minipage}
@@ -100,7 +112,7 @@
 			\begin{flushright} \large
 				\textbf{Professor:} \\
 				\vspace{3mm}
-				Professor Name
+				Muhamed Hadziabdic
 			\end{flushright}
 		\end{minipage}
 	\end{titlepage}
@@ -111,9 +123,27 @@
 	\listoftables
 
 	\pagebreak
-	\pagebreak
 
-	\tableofcontents
-	\pagebreak
+	\section{Introduction}
+		\subsection{Objective}
+		\subsection{Model Overview}
+		\subsection{Analysis Overview}
 	
+	\section{Modeling & Mesh Generation}
+		This section covers all of the steps that were taken for modeling of the problem and mesh generation.
+		\subsection{Surface generation}
+		\subsection{Solid Conversion and Geometry Validation}
+		\subsection{Mesh Generation}
+	
+	\section{Simulation}
+
+	\section{Post Processing (Analysis)}
+		\subsection{Temperature Contours}
+		\subsection{Velocity Magnitude and Streamlines}
+		\subsection{Quantative Analysis}
+	
+	
+	\appendix
+	\section{Gmsh Geometry Files}
+	\section{Control Files}
 \end{document}
