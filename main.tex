@@ -142,8 +142,33 @@
 		\subsection{Velocity Magnitude and Streamlines}
 		\subsection{Quantative Analysis}
 	
-	
+
+	\pagebreak
 	\appendix
 	\section{Gmsh Geometry Files}
+	\label{Appendix:GeoFiles}
+
+	\lstinputlisting[
+	  language=C,
+	  caption={Gmsh geometry file for mesh generation of the simple, no heatsink, model},
+	  label={lst:passive_geo}
+	]{code/passive_cooling.geo}
+
+	\vspace{2cm}
+
+	\lstinputlisting[
+	  language=C,
+	  caption={Gmsh geometry file for mesh generation of the advance, with heatsink, model},
+	  label={lst:active_geo}
+	]{code/active_cooling.geo}
+
+	\pagebreak
 	\section{Control Files}
+	\label{Appendix:ControlFiles}
+
+	\lstinputlisting[
+	  language=C,
+	  caption={Control file used for running the simulation},
+	  label={lst:control}
+	]{code/control}
 \end{document}
