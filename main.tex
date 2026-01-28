@@ -248,7 +248,7 @@
 				\begin{subfigure}{0.48\textwidth}
 					\centering
 					\includegraphics[width=\linewidth]{Images/Temperature_Contour_Simple_Bottom}
-					\caption{Temperature Contours of Air Side View}
+					\caption{Temperature Contours of Air Bottom View}
 					\label{fig:temp_cont_air_simple_bottom}
 				\end{subfigure}
 				\caption{Temperature Contours of Air for the Simple Case}
@@ -283,11 +283,113 @@
 
 			\noindent And as we can see, similar with figures in Figure~\ref{fig:temp_cont_air_simple}, the temperature contours that can be
 			seen for the CPU at the Figure~\ref{fig:temp_cont_cpu_simple} appear to show a big increase in heat for the sides of the cpu and mainly
-			to the front facing side (the side looking at the outflow) seems to have the highest heat. We will see in section~\ref{sec:Velocity Magnitude and Streamlines} why this is.
+			to the front facing side (the side looking at the outflow) seems to have the highest heat. We will see in section~\ref{sec:Velocity Magnitude and Streamlines} why this is.\newline
+
+			\noindent Now lets take a look at the temperature contours when adding a heat sink.
+
+			\begin{figure}[H]
+				\centering
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\includegraphics[width=\linewidth, clip, trim=20cm 0cm 20cm 0cm]{Images/Temperature_Contour_Top_View_Advance}
+					\caption{Temperature Contours of Air Top View}
+					\label{fig:temp_cont_air_complex_top}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\includegraphics[width=\linewidth, clip, trim=20cm 0cm 20cm 0cm]{Images/Temperature_Contour_Bottom_View_Advance}
+					\caption{Temperature Contours of Air Bottom View}
+					\label{fig:temp_cont_air_complex_bottom}
+				\end{subfigure}
+				\medskip
+				\begin{subfigure}{\textwidth}
+					\centering
+					\includegraphics[width=.7\linewidth, clip, trim=15cm 0cm 17cm 0cm]{Images/Temperature_Contour_Side_View_Advance}
+					\caption{Temperature Contours of Air Side View}
+					\label{fig:temp_cont_air_complex_side}
+				\end{subfigure}
+				\caption{Temperature Contours of Air for the Advance Case}
+				\label{fig:temp_cont_air_complex}
+			\end{figure}
+
+			\noindent Figure~\ref{fig:temp_cont_air_complex} shows the Top the Bottom and the Side views of the contour surfaces of Air, and as can be seen
+			it is pretty similar to the contour surfaces we saw at Figure~\ref{fig:temp_cont_air_simple}. We have cold air comming in from the inflow and the air around
+			the heat sink is of similar warmer temperature then the air coming in, which tells us that it is taking the heat off. However, as can be seen in Figure~\ref{fig:temp_cont_air_complex_bottom} we still have the problem with the front side of the CPU
+			heating up the air.
 		\subsection{Velocity Magnitude and Streamlines}
 			\label{sec:Velocity Magnitude and Streamlines}
+			\noindent Now lets take a look at the velocity streamlines and magnitude of our simulation to see if it can explain why the front side of our CPU is getting so warm.
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=\textwidth, clip, trim=20cm 5cm 20cm 5cm]{Images/Flow_Simple}
+				\caption{Velocity Magnitude and Streamlines for the simple case}
+				\label{fig:Vel_Mag_Streamlines_Simple}
+			\end{figure}
+
+			\noindent From Figure~\ref{fig:Vel_Mag_Streamlines_Simple} we can now see exactly why the front side of the CPU is so warm.
+			The top side of the CPU constantly has air coming in and hitting it, carrying away heat with it. However, when we look at the sides
+			we can see that, because the inflow is not right above the CPU, the back side of the cpu is still getting some air in, not hitting it directly, but
+			enough to cool it down. This is why we can see, in Figure~\ref{fig:temp_cont_cpu_simple_back}, that the CPU is warmer on the back then it is
+			on the top, but it is still cool compared to the front. In contrast, the front region receives little direct fresh airflow. As a
+			result, the majority of air mixing in this area is driven by buoyancy effects, where heated air rises and is replaced by cooler
+			surrounding air.
+
+			\begin{figure}[h!]
+				\centering
+				\begin{subfigure}{\textwidth}
+					\centering
+					\includegraphics[width=\linewidth, clip, trim=3cm 0cm 0cm 0cm]{Images/Flow_Advance}
+					\caption{Air Flow around the Heat Sink}
+					\label{fig:air_flow_advance_with_fins}
+				\end{subfigure}
+				\medskip
+				\begin{subfigure}{\textwidth}
+					\centering
+					\includegraphics[width=\linewidth, clip, trim=5cm 0cm 8cm 0cm]{Images/Flow_Advance_Between_Spikes}
+					\caption{Air Flow around the Heat Sink and between the fins}
+					\label{fig:air_flow_advance_between_fins}
+				\end{subfigure}
+				\caption{Velocity Magnitude and Streamlines for the advance case}
+				\label{fig:Vel_Mag_Streamlines_Advance}
+			\end{figure}
+
+			\noindent We can see that adding the heat sink actually makes our air movement even more restricted.
+			Even though there is a good amount of movement happening between the fins, the sides of the cpu, and the heat sink, now
+			get barely any fresh air just like with the simple case. The back side of the heat sink still gets some fresh air coming in,
+			thanks to the fact that the inflow is not centered right above the CPU, which explains
+			why the temperature contour surfaces of the air, as can be seen in Figure~\ref{fig:temp_cont_air_complex_bottom},
+			on the back side is warmer then the air surrounding the top-front surface of the heat sink, but not as warm as the air on the front side of the CPU.
+
 		\subsection{Quantative Analysis}
-	
+			\noindent The maximum, minimum, and average temperature of all cells of the CPU for the simple case ended up stabilizing around the values: \newline
+			\begin{table}[h!]
+				\centering
+				\begin{tabular}{|c|c|c|c|}
+					\toprule
+					\textbf{$T_{\min}$} & \textbf{$\bar{T}$} & \textbf{$T_{\max}$} & \textbf{$T_{\max} - T_{\min}$} \\
+					\midrule
+					72.66 K & 220.8 K & 625.58 K & 552.92 K \\
+					\bottomrule
+				\end{tabular}
+				\caption{Temperature statistics of all cells on the CPU for the Simple Case}
+				\label{tab:simple_case_temp}
+			\end{table}
+
+			\noindent As we can see from table~\ref{tab:simple_case_temp}, $T_\min$ gives us temperature of the most cooled cells, and as it so happens to be, this is very close to the temperature
+			of the contour surface of the air right on top of the CPU as can be seen in Figure~\ref{fig:temp_cont_air_simple_side}. \newline
+
+			\noindent $T_\max$ tells us the temperature of the cells that has the most heat, for our case this is always cells on the front side of the CPU
+			as explained in the previous two subsection. \newline
+
+			\noindent The average temperature $\bar{T}$ represents the mean temperature across all computational cells of the CPU.
+			When $\bar{T}$ is closer to $T_{\min}$, the temperature distribution is skewed toward lower values, whereas a value closer to $T_{\max}$ indicates a bias toward higher temperatures.
+			In this case, the computed average temperature of $220.8\,\text{K}$ is significantly closer to $T_{\min}$ than to $T_{\max}$, indicating that most of the CPU surface remains relatively cool.
+	 		This behavior is expected, as the largest exposed surface area—namely the top surface of the CPU—experiences the most effective cooling.\newline
+
+			\noindent Temperature Uniformity, $T_{\max} - T_{\min}$, just tells us how uniform our temperature is, ideally we would want to have this as close to 0 as possible while at the same time having a low temperature on the CPU.
+			However, because of all the things we talked about in the previous 2 subsection, we know uniformity is not that good because the front side of the CPU is getting barely any fresh air flow.
+
 
 	\pagebreak
 	\appendix
