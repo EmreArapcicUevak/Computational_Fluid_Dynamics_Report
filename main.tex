@@ -125,21 +125,167 @@
 	\pagebreak
 
 	\section{Introduction}
+		\noindent In this section we will cover the brief overview of the project and the goal of the analysis.
+	
 		\subsection{Objective}
+			The objective of this project was to investigate the thermal behavior of a microcontroller and assess the effectiveness of heat sink–assisted cooling in mitigating processor overheating. As microcontrollers operate at increasing power densities within compact enclosures, efficient heat transfer from the processor to the surrounding air becomes an important design consideration. \\
+
+			\noindent To this end, a Computational Fluid Dynamics (CFD) analysis was conducted to compare two cooling configurations: a baseline microcontroller setup and a configuration incorporating a heat sink to increase the effective heat transfer surface area. The simulations were performed using open-source tools for geometry modeling and numerical analysis, allowing the flow and temperature fields within the air domain to be examined and the cooling performance of each configuration to be evaluated.
 		\subsection{Model Overview}
+			\label{sec:Model Overview}
+			\noindent The model we decided to work with was a simplified microcontroller with a case similar to the one like Raspberry Pi. It has
+			one inflow fan pushing air into the case from the top and has one outflow on the side to let the air leave.
+
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=\textwidth]{Images/Clip_Of_Model}
+
+				\caption{Clip of the heat sinkless microcontroller}
+				\label{fig:SimpleCoolingModel}
+			\end{figure}
+
+			\noindent Figure~\ref{fig:SimpleCoolingModel} shows a clip of our model where each boundary that was separated, more on that later, is shown
+			in different colors. \\
+
+			\noindent The components like the GPIOs, USB / Ethernet / HDMI  Ports, and Small indentations were replaced with simpler models to avoid
+			making the model too complex. \\
+
 		\subsection{Analysis Overview}
+			\noindent Once we finish doing the simulations, to compare how well the model with the heat sink performed, compared to the one with
+			no heat sink, we will look at the processor's cells Maximum, Minimum, and Average temperature.
+
+			\noindent On top of that we will also take a look at how well does the air flow through the microcontroller, and check the temperature uniformity
+			on the heat sink to see how well the heat sink keeps the entire CPU cool, not just at certain parts. \\
+
+			\noindent After all of this we will give some comments on possible future improvements.
 	
 	\section{Modeling & Mesh Generation}
-		This section covers all of the steps that were taken for modeling of the problem and mesh generation.
+		This section covers all the steps that were taken for modeling of the problem and mesh generation.
 		\subsection{Surface generation}
+			The initial surface geometry was modeled in Blender. While Blender is a \emph{polygonal modeler},
+			the resulting meshes were a `hollow shell` which required conversion for volumetric analysis.
+			The meshes were exported as STL files.
+
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=\textwidth]{Images/air_domain}
+				\caption{Air Domain}
+				\label{fig:air_domain}
+			\end{figure}
+
+			\noindent Figure~\ref{fig:air_domain} shows the resulting `air domain` after doing a boolean difference operation on the original model
+			with a cube to just get the area that the air can flow through.
+
 		\subsection{Solid Conversion and Geometry Validation}
+			\noindent The STL's were further imported into FreeCAD where the meshes were converted into shapes and then into solids. This step was critical because it converts the data from a simple list of triangles into a Boundary Representation that GMSH can use to identify into a internal volume. FreeCAD's "Check Geometry" tool was utilized to ensure there were no self-intersecting faces or no "non-manifold" edges that would cause the meshing algorithm to fail.
+
 		\subsection{Mesh Generation}
+			\noindent The mesh was generated using GMSH via a \textbf{.geo} scripting approach, all of the code can be found in the Appendix~\ref{Appendix:GeoFiles}. Using a script instead of a manual interface ensured that the mesh was exactly reproducible and allowed for quick adjustments between reconfigurations. \\
+
+			\noindent The meshing process followed four main steps:
+
+			\begin{itemize}
+				\item \textbf{Geometry Import:} The air domain was imported as a STEP file, and an elementary volume was created.
+
+				\item \textbf{Sizing Control:} Logical constraints were introduced to define the tetrahedral mesh size and control the overall element count.
+
+				\item \textbf{Numerical Algorithms and Optimization:} Specific numerical algorithms were employed to ensure high-quality tetrahedral elements. The Frontal-Delaunay algorithm was used for surface meshing (\texttt{Mesh.Algorithm}), while the HXT algorithm was selected for generating the internal tetrahedral volume (\texttt{Mesh.Algorithm3D}). In addition, the \texttt{Mesh.Optimize} and \texttt{Mesh.OptimizeNetgen} options were enabled with a threshold value of 0.4 to remove low-quality ``sliver'' elements that could negatively affect simulation stability.
+
+				\item \textbf{Physical Boundary Labeling:} Each surface was assigned a unique physical label to allow the solver (T-Flows) to correctly identify boundaries and apply the appropriate physical properties.
+			\end{itemize}
 	
 	\section{Simulation}
+		\subsection{Simplifications}
+			\noindent Before we start the simulation there are some simplifications, other than the ones done on the model as covered in the
+			section~\ref{sec:Model Overview},  that need to be made. \\
+
+			\noindent Heat transfer from the CPU to the heat sink was modeled as if the heat transferred instantaneously from the CPU to the Heat Sink.
+			This allowed us to avoid having to run an additional interconnected simulation between the CPU and the Heat Sink. \\
+
+			\noindent This was primarily done to avoid the complexity that came with the alternative approach due to time constraints. \\
+
+			\noindent Another simplification that was also done was the grouping of other components, such as ram slots and or IO ports,
+			with the wall boundary and making every wall adiabatic. This was done purely to simplify the simulation as other components
+			on the board rarely gave out heat when compared to the CPU, and the adiabatic walls were choosen as to not have to deal with
+			the outside affecting the temperature of the case walls.
+
+		\subsection{Physical Model}
+			\noindent The working fluid that was taken was Air at room temperature, the initial conditions of the air inside the microcontroller
+			was set to be stationary and have the same temperature as the outside air, which we took to be 20$^\circ C$. \newline
+
+			\noindent For the turbulence model we used RANS $k$--$\varepsilon$--$\zeta$--$f$ \newline
+
+			\noindent On top of this the walls were also set to have a constant temperature of 20$^\circ C$, and the air flowing into the domain
+			had a speed $3 \frac{m}{s}$ flowing down into the board (this is pretty high but was done so there would be significant movement of air coming in) also at $20^\circ C$ \newline
+
+			\noindent We took the power of the CPU to be $10W$, while this can seem high this was done on purpose to simulate a CPU of a microcontroller working on a full load. In other words
+			we wanted to see how stable the temperature throttling would be when the CPU was working on its theoretical highest setting.
+
+			\begin{tcolorbox}[
+				colback=red!5,
+				colframe=red!70!black,
+				title=Important,
+				fonttitle=\bfseries
+			]
+				Whilst making this simulation we made one important oversight, while setting the temperature in the control file, List~\ref{lst:control}, we actually set the temperature to $20$ which
+				ended up setting the temperature to $20K$ instead of $20^\circ C$! Sadly we did not have enough time to re-run the simulations but this is not a hard fix.
+			\end{tcolorbox}
 
 	\section{Post Processing (Analysis)}
 		\subsection{Temperature Contours}
+			\noindent We will first start off by analyzing the temperature contours of the simple case of the air to see where the air of the
+			same temperature tends to `group up`.
+
+			\begin{figure}[h!]
+				\centering
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\includegraphics[width=\linewidth, clip, trim=15cm 4cm 38cm 2cm]{Images/Temperature_Contour_Side_View_Simple}
+					\caption{Temperature Contours of Air Side View}
+					\label{fig:temp_cont_air_simple_side}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\includegraphics[width=\linewidth]{Images/Temperature_Contour_Simple_Bottom}
+					\caption{Temperature Contours of Air Side View}
+					\label{fig:temp_cont_air_simple_bottom}
+				\end{subfigure}
+				\caption{Temperature Contours of Air for the Simple Case}
+				\label{fig:temp_cont_air_simple}
+			\end{figure}
+
+			\noindent Figure~\ref{fig:temp_cont_air_simple} shows the temperature contours of the air from the side and from the bottom, and the
+			first thing that can be seen is that the air flowing in seems to hold a constant cool temperature all the way down until it hits the CPU where then it rises in temperature and in fact, as can be seen in
+			Figure~\ref{fig:temp_cont_air_simple_side}, all of the air around the CPU seems to have stabilized at around $86K$. \newline
+
+			\noindent However, if we take a look at Figure~\ref{fig:temp_cont_air_simple_bottom} we will see that there appears to be some contours of
+			really hot air $500K+$. To explain this we will have to take a look at the temperature of the CPU and also at the Velocity Streamlines, section~\ref{sec:Velocity Magnitude and Streamlines}, to understand what is happening.
+
+			\begin{figure}[h!]
+				\centering
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\includegraphics[width=\linewidth]{Images/Temp_Contour_Simple_CPU_Back}
+					\caption{Temperature Contours of the CPU's Back}
+					\label{fig:temp_cont_cpu_simple_back}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\includegraphics[width=\linewidth]{Images/Temp_Contour_Simple_CPU_Front}
+					\caption{Temperature Contours of the CPU's Front}
+					\label{fig:temp_cont_cpu_simple_front}
+				\end{subfigure}
+				\caption{Temperature Contours of the CPU for the Simple Case}
+				\label{fig:temp_cont_cpu_simple}
+			\end{figure}
+
+			\noindent And as we can see, similar with figures in Figure~\ref{fig:temp_cont_air_simple}, the temperature contours that can be
+			seen for the CPU at the Figure~\ref{fig:temp_cont_cpu_simple} appear to show a big increase in heat for the sides of the cpu and mainly
+			to the front facing side (the side looking at the outflow) seems to have the highest heat. We will see in section~\ref{sec:Velocity Magnitude and Streamlines} why this is.
 		\subsection{Velocity Magnitude and Streamlines}
+			\label{sec:Velocity Magnitude and Streamlines}
 		\subsection{Quantative Analysis}
 	
 
