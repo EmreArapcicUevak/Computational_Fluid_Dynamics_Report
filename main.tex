@@ -121,6 +121,7 @@
 	\tableofcontents
 	\listoffigures
 	\listoftables
+	\lstlistoflistings
 
 	\pagebreak
 
@@ -315,8 +316,41 @@
 
 			\noindent Figure~\ref{fig:temp_cont_air_complex} shows the Top the Bottom and the Side views of the contour surfaces of Air, and as can be seen
 			it is pretty similar to the contour surfaces we saw at Figure~\ref{fig:temp_cont_air_simple}. We have cold air comming in from the inflow and the air around
-			the heat sink is of similar warmer temperature then the air coming in, which tells us that it is taking the heat off. However, as can be seen in Figure~\ref{fig:temp_cont_air_complex_bottom} we still have the problem with the front side of the CPU
+			the heat sink is of similar warmer temperature then the air coming in, which tells us that it is taking the heat off. However, as can be seen in Figure~\ref{fig:temp_cont_air_complex_bottom} and Figure~\ref{fig:temp_contour_heat_sink_bottom} we still have the problem with the front side of the CPU
 			heating up the air.
+			
+			\begin{figure}[H]
+				\centering
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\scalebox{1}[-1]{\includegraphics[width=.735\linewidth, angle=-90]{Images/Temperature_Contour_Bottom_View_Advance_HeatSink}}
+					\caption{Temperature Contours of the Heatsink's Bottom}
+					\label{fig:temp_contour_heat_sink_bottom}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\includegraphics[width=\linewidth]{Images/Temperature_Contour_Top_View_Advance_HeatSink}
+					\caption{Temperature Contours of the Heatsink's Top}
+				\end{subfigure}
+
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\includegraphics[width=\linewidth]{Images/Temperature_Contour_Side_View_Advance_HeatSink}
+					\caption{Temperature Contours of the Heatsink's Bottom}
+				\end{subfigure}
+				\hfill
+				\begin{subfigure}{0.48\textwidth}
+					\centering
+					\includegraphics[width=\linewidth]{Images/Temperature_Contour_Front_View_Advance_HeatSink}
+					\caption{Temperature Contours of the Heatsink's Top}
+				\end{subfigure}
+
+				\caption{Temperature Contours of the Heat Sink}
+				\label{fig:TempContHeatSink}
+			\end{figure}
+
+
 		\subsection{Velocity Magnitude and Streamlines}
 			\label{sec:Velocity Magnitude and Streamlines}
 			\noindent Now lets take a look at the velocity streamlines and magnitude of our simulation to see if it can explain why the front side of our CPU is getting so warm.
