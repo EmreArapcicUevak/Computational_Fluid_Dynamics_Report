@@ -434,9 +434,55 @@
 	 		This behavior is expected, as the largest exposed surface area—namely the top surface of the CPU—experiences the most effective cooling.\newline
 
 			\noindent Temperature Uniformity, $T_{\max} - T_{\min}$, just tells us how uniform our temperature is, ideally we would want to have this as close to 0 as possible while at the same time having a low temperature on the CPU.
-			However, because of all the things we talked about in the previous 2 subsection, we know uniformity is not that good because the front side of the CPU is getting barely any fresh air flow.
+			However, because of all the things we talked about in the previous 2 subsection, we know uniformity is not that good because the front side of the CPU is getting barely any fresh air flow. \newline
 
+			\noindent Now if we take a look at the case where we have the heat sink, we get the following results:
+			\begin{table}[h!]
+				\centering
+				\begin{tabular}{|c|c|c|c|}
+					\toprule
+					\textbf{$T_{\min}$} & \textbf{$\bar{T}$} & \textbf{$T_{\max}$} & \textbf{$T_{\max} - T_{\min}$} \\
+					\midrule
+					21.47 K & 38.80 K & 158.00 K & 136.53 K \\
+					\bottomrule
+				\end{tabular}
+				\caption{Temperature statistics of all cells on the CPU for the Simple Case}
+				\label{tab:advance_case_temp}
+			\end{table}
 
+			\noindent As we can see from Table~\ref{tab:advance_case_temp}, the values are drastically lower even if the simulations ran for the same amount of time!
+			But to get an even clearer picture lets see the distribution of the temperature across all the cells, keep in mind that the heat sink model has more cells than the model without.
+
+			\begin{figure}[H]
+					\centering
+					\begin{subfigure}{\textwidth}
+						\centering
+						\includegraphics[width=.7\linewidth]{Images/Temp_Dist_CPU}
+						\caption{Distribution of heat across the model without the Heat Sink}
+						\label{fig:Temperature_Distribution_CPU}
+					\end{subfigure}
+
+					\medskip
+
+					\begin{subfigure}{\textwidth}
+						\centering
+						\includegraphics[width=.7\linewidth]{Images/Temp_Dist_Heat_Sink}
+						\caption{Distribution of heat across the model with the Heat Sink}
+						\label{fig:Temperature_Distribution_HeatSink}
+					\end{subfigure}
+
+					\caption{Heat Distribution across the different models}
+					\label{fig:Temperature_Distribution}
+			\end{figure}
+
+			\noindent Figure~\ref{fig:Temperature_Distribution_CPU} shows the distribution of the temperature across all the cells on the CPU
+			(no heat sink). Figure~\ref{fig:Temperature_Distribution_HeatSink} shows the distribution of the temperature across all the cells on
+			the heat sink. \newline
+
+			\noindent From these two images we can clearly see, even though the heat sink still has the same issue where the front side of the CPU
+			keeps warming up because of the lack of air, the heat sink allows that temperature to move upwards where it can reach the cooler air;
+			hence, the distribution of the temperature of the heat sink is drastically different from the one for the CPU alone and is also more compact,
+			meaning the temperature is more uniform across the heat sink then it is just on the CPU.
 	\pagebreak
 	\appendix
 	\section{Gmsh Geometry Files}
