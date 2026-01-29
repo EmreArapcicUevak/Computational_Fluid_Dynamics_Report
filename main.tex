@@ -139,13 +139,25 @@
 
 			\begin{figure}[h!]
 				\centering
-				\includegraphics[width=\textwidth]{Images/Clip_Of_Model}
+				\begin{subfigure}{\textwidth}
+					\centering
+					\includegraphics[width=0.85\linewidth]{Images/Clip_Of_Model}
+					\caption{Clip of the model without the heat sink}
+				\end{subfigure}
 
-				\caption{Clip of the heat sinkless microcontroller}
+				\medskip
+
+				\begin{subfigure}{\textwidth}
+					\centering
+					\includegraphics[width=0.85\linewidth]{Images/Clip_Of_Model_With_HeatSink}
+					\caption{Clip of the model with the heat sink}
+				\end{subfigure}
+
+				\caption{Clip of the microcontroller model}
 				\label{fig:SimpleCoolingModel}
 			\end{figure}
 
-			\noindent Figure~\ref{fig:SimpleCoolingModel} shows a clip of our model where each boundary that was separated, more on that later, is shown
+			\noindent Figure~\ref{fig:SimpleCoolingModel} shows clips of our models (with and without a heat sink) where each boundary that was separated, more on that later, is shown
 			in different colors. \\
 
 			\noindent The components like the GPIOs, USB / Ethernet / HDMI  Ports, and Small indentations were replaced with simpler models to avoid
